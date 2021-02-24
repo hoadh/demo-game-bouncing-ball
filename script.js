@@ -18,7 +18,19 @@ class Bar {
 }
 
 class Ball {
+    constructor(x, y, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+    }
 
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
 }
 
 class Brick {
@@ -38,7 +50,14 @@ class Game {
         let x = this.game_screen.width / 2 - bar_width / 2;
         let y = this.game_screen.height - bar_height;
         this.bar = new Bar(x, y, bar_width, bar_height, "blue");
-        this.bar.draw(this.context);
+
+
+        let ball_radius = 10;
+        let ball_x = this.game_screen.width / 2 - ball_radius / 2;
+        let ball_y = this.game_screen.height / 2 - ball_radius / 2;
+        this.ball = new Ball(ball_x, ball_y, ball_radius, "red");
+        
+        this.redraw_screen();
     }
 
     clear_screen() {
@@ -47,6 +66,7 @@ class Game {
 
     redraw_screen() {
         this.bar.draw(this.context);
+        this.ball.draw(this.context);
     }
 
     handle_keyboard(window) {
