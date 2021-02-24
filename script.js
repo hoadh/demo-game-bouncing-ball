@@ -93,8 +93,30 @@ class Game {
         return (dx * dx + dy * dy) <= ball.radius * ball.radius;
     }
 
-    change_ball_direction() {
+    move_ball_vertical() {
         this.dy = -this.dy;
+    }
+
+    move_ball_horizontal() {
+        this.dx = -this.dx;
+    }
+
+    isBallTouchRightBorder() {
+        let right_border = this.game_screen.width;
+
+        return (this.ball.x >= right_border);
+    }
+
+    isBallTouchTopBorder() {
+        let top_border = 0;
+
+        return (this.ball.y < top_border);
+    }
+
+    isBallTouchLeftBorder() {
+        let left_border = 0;
+
+        return (this.ball.x < left_border);
     }
 
     clear_screen() {
@@ -112,8 +134,12 @@ class Game {
         setInterval(function() {
             self.clear_screen();
 
-            if (self.isCollision(self.ball, self.bar)) {
-                self.change_ball_direction();
+            if (self.isCollision(self.ball, self.bar) || self.isBallTouchTopBorder()) {
+                self.move_ball_vertical();
+            }
+
+            if (self.isBallTouchLeftBorder() || self.isBallTouchRightBorder()) {
+                self.move_ball_horizontal();
             }
 
             self.move_ball();
