@@ -25,6 +25,11 @@ class Ball {
         this.color = color;
     }
 
+    move(dx, dy) {
+        this.x += dx;
+        this.y += dy;
+    }
+
     draw(ctx) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -56,6 +61,8 @@ class Game {
         let ball_x = this.game_screen.width / 2 - ball_radius / 2;
         let ball_y = this.game_screen.height / 2 - ball_radius / 2;
         this.ball = new Ball(ball_x, ball_y, ball_radius, "red");
+        this.dx = 10;
+        this.dy = 10;
         
         this.redraw_screen();
     }
@@ -64,17 +71,26 @@ class Game {
         this.context.clearRect(0, 0, this.game_screen.width, this.game_screen.height);
     }
 
+    move_ball() {
+        this.ball.move(this.dx, this.dy);
+    }
+
     redraw_screen() {
-        this.bar.draw(this.context);
-        this.ball.draw(this.context);
+        let self = this;
+
+        // Lặp lại thao tác vẽ màn hình sau 1 khoảng thời gian
+        setInterval(function() {
+            self.clear_screen();
+            self.move_ball();
+            self.bar.draw(self.context);
+            self.ball.draw(self.context);
+        }, 100);
     }
 
     handle_keyboard(window) {
         let self = this;
         window.addEventListener('keydown', function(event) {
             let key = event.keyCode;
-
-            self.clear_screen();
 
             switch(key) {
                 case 37: // left arrow key
@@ -84,8 +100,6 @@ class Game {
                     self.bar.move(self.bar_speed);
                     break;
             }
-
-            self.redraw_screen();
         });
     }
 }
