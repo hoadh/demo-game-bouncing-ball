@@ -45,6 +45,10 @@ class Game {
         this.context.clearRect(0, 0, this.game_screen.width, this.game_screen.height);
     }
 
+    redraw_screen() {
+        this.bar.draw(this.context);
+    }
+
     handle_keyboard(window) {
         let self = this;
         window.addEventListener('keydown', function(event) {
@@ -61,8 +65,7 @@ class Game {
                     break;
             }
 
-            self.bar.draw(self.context);
-            
+            self.redraw_screen();
         });
     }
 }
