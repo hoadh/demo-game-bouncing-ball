@@ -39,7 +39,19 @@ class Ball {
 }
 
 class Brick {
+    constructor(x, y, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+    }
 
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
 }
 
 class Game {
@@ -63,9 +75,48 @@ class Game {
         this.ball = new Ball(ball_x, ball_y, ball_radius, "red");
         this.dx = 2;
         this.dy = 2;
+
+        this.bricks = [];
+        this.brick_row = 3;
+        this.brick_count_per_row = 21;
+        this.addBricks();
+        this.drawAllBricks();
         
         this.redraw_screen();
     }
+    
+    addBricks() {
+
+        let brick_radius = 10;
+
+        let bricks_distance = 5;
+
+        let current_brick_x = 20;
+        let current_brick_y = 0;
+
+        for (let i = 0; i < this.brick_row; i++) {
+            this.bricks.push([]); // thêm 1 hàng gạch mới
+
+            current_brick_x = 20;
+            current_brick_y += bricks_distance + brick_radius * 2;
+
+            for (let j = 0; j < this.brick_count_per_row; j++) {
+                current_brick_x += bricks_distance + brick_radius * 2;
+
+                let brick = new Brick(current_brick_x, current_brick_y, brick_radius, "green");
+                this.bricks[i].push(brick);
+            }
+        }
+    }
+
+    drawAllBricks() {
+        for (let i = 0; i < this.brick_row; i++) {
+            for (let j = 0; j < this.brick_count_per_row; j++) {
+                this.bricks[i][j].draw(this.context);
+            }
+        }
+    }
+
 
     // Hàm phát hiện va chạm giữa hình tròn và hình chữ nhật
     isCollision(ball, bar) {
@@ -133,6 +184,8 @@ class Game {
         // Lặp lại thao tác vẽ màn hình sau 1 khoảng thời gian
         setInterval(function() {
             self.clear_screen();
+
+            self.drawAllBricks();
 
             if (self.isCollision(self.ball, self.bar) || self.isBallTouchTopBorder()) {
                 self.move_ball_vertical();
